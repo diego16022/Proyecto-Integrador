@@ -15,7 +15,7 @@ Este módulo contiene el backend de la aplicación móvil **Outfit Recommender**
 - 📊 Consulta de historial de outfits y colores más usados
 
 ---
----
+
 ## 📂 Estructura del proyecto
 
 ```plaintext
@@ -44,5 +44,7 @@ backend/
 ├── requirements.txt         # Lista de dependencias del backend
 ├── .env.template            # Plantilla de archivo de configuración (.env)
 └── README.md                # Documentación del backend
+```
 ---
-## 📂 Estructura del proyecto
+
+## 🔐 Variables de entorno `.env`
