@@ -45,4 +45,13 @@ backend/
 └── README.md                # Documentación del backend
 ---
 
-## 📂 Estructura del proyecto
+## 🔐 Variables de entorno `.env`
+
+Asegúrate de crear un archivo `.env` con las siguientes variables:
+
+```env
+AWS_ACCESS_KEY_ID=TU_CLAVE
+AWS_SECRET_ACCESS_KEY=TU_SECRETO
+BUCKET_NAME=outfit-ai-images
+DATABASE_URL=mysql+mysqlconnector://usuario:contraseña@host/nombre_base_datos
+
