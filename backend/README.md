@@ -45,6 +45,7 @@ backend/
 └── README.md                # Documentación del backend
 ---
 
+```markdown
 ## 🔐 Variables de entorno `.env`
 
 Asegúrate de crear un archivo `.env` con las siguientes variables:
