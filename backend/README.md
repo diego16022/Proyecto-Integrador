@@ -15,8 +15,9 @@ Este módulo contiene el backend de la aplicación móvil **Outfit Recommender**
 - 📊 Consulta de historial de outfits y colores más usados
 
 ---
-
+---
 ## 📂 Estructura del proyecto
+
 ```plaintext
 backend/
 ├── main.py                  # Punto de entrada de la aplicación FastAPI
@@ -44,15 +45,4 @@ backend/
 ├── .env.template            # Plantilla de archivo de configuración (.env)
 └── README.md                # Documentación del backend
 ---
-
-```markdown
-## 🔐 Variables de entorno `.env`
-
-Asegúrate de crear un archivo `.env` con las siguientes variables:
-
-```env
-AWS_ACCESS_KEY_ID=TU_CLAVE
-AWS_SECRET_ACCESS_KEY=TU_SECRETO
-BUCKET_NAME=outfit-ai-images
-DATABASE_URL=mysql+mysqlconnector://usuario:contraseña@host/nombre_base_datos
-
+## 📂 Estructura del proyecto
