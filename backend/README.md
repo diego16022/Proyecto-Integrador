@@ -17,9 +17,12 @@ Este módulo contiene el backend de la aplicación móvil **Outfit Recommender**
 ---
 
 ## 📂 Estructura del proyecto
+## 📂 Estructura del proyecto
+
+```plaintext
 backend/
 ├── main.py                  # Punto de entrada de la aplicación FastAPI
-├── routes/                  # Carpeta que contiene todos los endpoints del sistema
+├── routes/                  # Endpoints del sistema
 │   ├── usuarios.py          # Rutas de autenticación, login, registro
 │   ├── prendas.py           # Rutas CRUD para gestionar prendas
 │   ├── outfits.py           # Rutas para crear y consultar outfits
@@ -29,7 +32,7 @@ backend/
 │   ├── prenda.py            # Modelo de Prenda
 │   ├── outfit.py            # Modelos de Outfit, Detalle_Outfit y Recomendacion
 │   └── estilo.py            # Modelo de Estilo_Prenda
-├── schemas/                 # Esquemas de validación con Pydantic
+├── schemas/                 # Validaciones de entrada/salida con Pydantic
 │   ├── usuario.py           # Esquemas para creación y respuesta de usuario
 │   ├── prenda.py            # Esquemas para operaciones con prendas
 │   ├── outfit.py            # Esquemas para outfits y recomendaciones
@@ -37,10 +40,10 @@ backend/
 ├── utils/                   # Funciones auxiliares
 │   ├── s3_upload.py         # Subida de imágenes a Amazon S3
 │   └── ia_predictor.py      # Carga y ejecución del modelo de IA (ResNet)
-├── ml_models/               # Carpeta de modelos entrenados
+├── ml_models/               # Modelos entrenados para IA
 │   └── skin_type_model_entero.pt  # Modelo de clasificación de tono de piel
 ├── requirements.txt         # Lista de dependencias del backend
-├── .env.template            # Plantilla de variables de entorno (.env)
+├── .env.template            # Plantilla de archivo de configuración (.env)
 └── README.md                # Documentación del backend
 
 
