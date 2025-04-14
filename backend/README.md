@@ -34,14 +34,14 @@ BUCKET_NAME=....
 DATABASE_URL=mysql+mysqlconnector://usuario:password@host/db
 
 ---
-Cómo ejecutar el backend
+## Cómo ejecutar el backend
 # 1. Instalar dependencias
 pip install -r requirements.txt
 
 # 2. Ejecutar servidor en desarrollo
 uvicorn main:app --reload
 ---
-📡 Endpoints principales
+##📡 Endpoints principales
 Método	Ruta	Funcionalidad
 POST	/usuarios/	Crear nuevo usuario
 POST	/usuarios/login	Iniciar sesión
