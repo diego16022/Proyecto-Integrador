@@ -33,14 +33,15 @@ AWS_SECRET_ACCESS_KEY=...
 BUCKET_NAME=....
 DATABASE_URL=mysql+mysqlconnector://usuario:password@host/db
 
-
+---
 Cómo ejecutar el backend
 # 1. Instalar dependencias
 pip install -r requirements.txt
 
 # 2. Ejecutar servidor en desarrollo
 uvicorn main:app --reload
-
+---
+📡 Endpoints principales
 Método	Ruta	Funcionalidad
 POST	/usuarios/	Crear nuevo usuario
 POST	/usuarios/login	Iniciar sesión
@@ -51,8 +52,7 @@ GET	/prendas/{id_usuario}	Listar todas las prendas de un usuario
 GET	/colores-recomendados/{tono_piel}	Obtener paleta de colores recomendada según tono de piel
 POST	/outfits/	Crear outfit aceptado desde sugerencia
 GET	/outfits/{id_usuario}	Listar historial de outfits del usuario
-📡 Endpoints principales
-
+---
 🧠 Modelo de IA
 Modelo: ResNet34 entrenado con PyTorch
 
@@ -61,7 +61,7 @@ Tarea: Clasificación de tono de piel (6 clases)
 Entrada: Imagen subida por el usuario
 
 Salida: Clase de tono de piel (ej. "Tipo IV") → usada para paleta recomendada
-
+---
 ☁️ Integraciones AWS
 Amazon S3: almacenamiento de imágenes en carpetas:
 
@@ -72,6 +72,7 @@ outfits/user_{id} → imágenes de prendas
 Amazon RDS: base de datos MySQL con tablas:
 
 Usuario, Prenda, Outfit, Detalle_Outfit, Recomendacion, etc.
+---
 👨‍💻 Autor
 Diego Andrés Reinoso Calderón
 Universidad San Francisco de Quito
