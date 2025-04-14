@@ -17,8 +17,6 @@ Este módulo contiene el backend de la aplicación móvil **Outfit Recommender**
 ---
 
 ## 📂 Estructura del proyecto
-## 📂 Estructura del proyecto
-
 ```plaintext
 backend/
 ├── main.py                  # Punto de entrada de la aplicación FastAPI
