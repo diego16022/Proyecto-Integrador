@@ -45,3 +45,6 @@ backend/
 └── README.md                # Documentación del backend
 
 
+---
+
+## 🔐 Variables de entorno `.env`
