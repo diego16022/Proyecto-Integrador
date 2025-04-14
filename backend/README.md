@@ -43,8 +43,6 @@ backend/
 ├── requirements.txt         # Lista de dependencias del backend
 ├── .env.template            # Plantilla de archivo de configuración (.env)
 └── README.md                # Documentación del backend
-
-
 ---
 
-## 🔐 Variables de entorno `.env`
+## 📂 Estructura del proyecto
