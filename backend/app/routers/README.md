@@ -35,8 +35,8 @@ app = FastAPI()
 app.include_router(usuario.router, prefix="/usuarios", tags=["Usuarios"])
 app.include_router(prenda.router, prefix="/prendas", tags=["Prendas"])
 app.include_router(outfit.router, prefix="/outfits", tags=["Outfits"])
-
-
+```
+---
 ##📤 Ejemplo de endpoint
 
 
