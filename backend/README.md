@@ -69,3 +69,5 @@ pip install -r requirements.txt
 
 Ejecutar servidor en desarrollo
 uvicorn app.main:app --reload
+
+---
