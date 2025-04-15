@@ -86,7 +86,7 @@ uvicorn app.main:app --reload
 
 ---
 ## 🧠 Inteligencia Artificial
--Modelo: ResNet34 entrenado en PyTorch
+-**Modelo**: ResNet34 entrenado en PyTorch
 
 -Uso: Clasifica el tono de piel del usuario con base en una imagen
 
@@ -99,15 +99,14 @@ uvicorn app.main:app --reload
 ---
 
 ## ☁️ Integración con AWS
--📦 Amazon S3: para almacenar imágenes en carpetas como:
 
-  -users/user_{id}/
+- 📦 **Amazon S3**: para almacenar imágenes en carpetas como:
+  - `users/user_{id}/`
+  - `outfits/user_{id}/`
 
-  -outfits/user_{id}/
+- 🗄️ **Amazon RDS (MySQL)**:
+  - Estructura relacional: `Usuario`, `Prenda`, `Outfit`, `Detalle_Outfit`, `Recomendacion`, `Estilo_Prenda`, `Metrica_Uso`, etc.
 
--🗄️ Amazon RDS (MySQL):
-
--Estructura relacional: Usuario, Prenda, Outfit, Detalle_Outfit, Recomendacion, Estilo_Prenda, Metrica_Uso, etc.
 
 ---
 👨‍💻 Autor
