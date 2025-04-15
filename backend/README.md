@@ -71,3 +71,17 @@ Ejecutar servidor en desarrollo
 uvicorn app.main:app --reload
 
 ---
+## 📡 Endpoints principales
+| **Método** | **Ruta** | **Funcionalidad** |
+|------------|----------|-------------------|
+| `POST`     | `/usuarios/` | Registro de usuario |
+| `POST`     | `/usuarios/login` | Login |
+| `POST`     | `/usuarios/{id}/analisis-cromatico` | Análisis de tono de piel desde imagen |
+| `POST`     | `/upload/prenda` | Subida de imagen a Amazon S3 |
+| `POST`     | `/prendas/` | Crear nueva prenda |
+| `GET`      | `/prendas/{id_usuario}` | Listar prendas del usuario |
+| `POST`     | `/outfits/` | Guardar outfit aceptado |
+| `GET`      | `/outfits/{id_usuario}` | Historial de outfits |
+| `GET`      | `/colores-recomendados/{tono}` | Paleta sugerida según tono de piel |
+
+---
