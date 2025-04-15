@@ -85,3 +85,33 @@ uvicorn app.main:app --reload
 | `GET`      | `/colores-recomendados/{tono}` | Paleta sugerida según tono de piel |
 
 ---
+## 🧠 Inteligencia Artificial
+-Modelo: ResNet34 entrenado en PyTorch
+
+-Uso: Clasifica el tono de piel del usuario con base en una imagen
+
+-Archivo: app/modelos/skin_type_model.pt
+
+-Salida: Tipo I a Tipo VI
+
+-Utilidad: Adaptar paleta de colores y sugerencias visuales
+
+---
+
+## ☁️ Integración con AWS
+-📦 Amazon S3: para almacenar imágenes en carpetas como:
+
+  -users/user_{id}/
+
+  -outfits/user_{id}/
+
+-🗄️ Amazon RDS (MySQL):
+
+-Estructura relacional: Usuario, Prenda, Outfit, Detalle_Outfit, Recomendacion, Estilo_Prenda, Metrica_Uso, etc.
+
+---
+👨‍💻 Autor
+Diego Andrés Reinoso Calderón
+Ingeniería en Ciencias de la Computación
+Universidad San Francisco de Quito
+Tutor: Felipe Grijalva Arévalo
