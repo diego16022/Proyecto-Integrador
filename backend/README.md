@@ -86,13 +86,13 @@ uvicorn app.main:app --reload
 
 ---
 ## 🧠 Inteligencia Artificial
--**Modelo**: ResNet34 entrenado en PyTorch
+- **Modelo**: ResNet34 entrenado en PyTorch
 
- -`Uso: Clasifica el tono de piel del usuario con base en una imagen`
+ - `Uso: Clasifica el tono de piel del usuario con base en una imagen`
 
- -`Archivo: app/modelos/skin_type_model.pt`
+ - `Archivo: app/modelos/skin_type_model.pt`
 
- -`Salida: Tipo I a Tipo VI`
+ - `Salida: Tipo I a Tipo VI`
 
  - `Utilidad: Adaptar paleta de colores y sugerencias visuales`
 
