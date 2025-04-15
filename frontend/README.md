@@ -79,8 +79,13 @@ const String baseUrl = 'http://10.0.2.2:8000'; // o IP pública si está en nube
 ---
 Autor
 
+👨‍💻 Autor
 Diego Andrés Reinoso Calderón
 
-Proyecto: Outfit Recommender
+Ingeniería en Ciencias de la Computación
+
+Universidad San Francisco de Quito
+
+Tutor: Felipe Grijalva Arévalo
 
 
