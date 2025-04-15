@@ -55,6 +55,7 @@ backend/
 ├── venv/                        # Entorno virtual (no se sube al repo)
 └── README.md              
 ```
+---
 ## 🔐 Variables de entorno `.env`
 Crea un archivo .env con las siguientes variables:
 AWS_ACCESS_KEY_ID=TU_CLAVE
