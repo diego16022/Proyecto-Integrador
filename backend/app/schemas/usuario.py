@@ -25,3 +25,7 @@ class UsuarioUpdate(BaseModel):
     email: str = None
     contrasena: str= None
     tono_piel: str = None
+
+class AnalisisCromaticoIn(BaseModel):
+    foto_url: str
+    tono_piel: str

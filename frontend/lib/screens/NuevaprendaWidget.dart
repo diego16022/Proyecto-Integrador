@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:frontend/services/prenda_service.dart';
+import 'package:frontend/services/auth_service.dart' as auth;
+
 
 
 enum TipoPrendaEnum { Camisa, Pantalon, Zapatos, Accesorios }
@@ -211,6 +213,7 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
                     onTap: () async {
                       try {
                         String? uploadedImageUrl;
+                        
 
                         if (_imageFile != null) {
                           uploadedImageUrl = await PrendaService.uploadImage(_imageFile!, 1);
@@ -221,13 +224,15 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
                         print("_temporada: $_temporada");
                         print("_color: $_color");
                         print("_idEstiloSeleccionado: $_idEstiloSeleccionado");
+                        print("uploadedImageUrl: $uploadedImageUrl");
+                        print("idUsuario: ${auth.SesionUsuario.idUsuario}");
                         await PrendaService.crearPrenda(
                           nombre: _nombre!,
                           tipo: _tipo!.name.toString().split('.').last,
                           color: '#${_color!.value.toRadixString(16).padLeft(8, '0').substring(2)}',
                           temporada: mapTemporada(_temporada!),
                           estadoUso: _estado!.name.toString().split('.').last.replaceAll('_', ' '),
-                          idUsuario: 1,
+                          idUsuario: auth.SesionUsuario.idUsuario!,
                           imagenUrl: uploadedImageUrl,
                           idEstilo: _idEstiloSeleccionado!,
                         );

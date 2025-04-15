@@ -5,6 +5,8 @@ import 'closetvirtual_widget.dart';
 import 'analisi_cromatico.dart';
 import 'recomendaciones_widget.dart';
 import 'configuraciones_widget.dart';
+import 'package:frontend/screens/closetvirtual_widget.dart';
+import 'package:frontend/screens/analisi_cromatico.dart';
 
 
 class HomeWidget extends StatefulWidget {
@@ -26,9 +28,9 @@ class _HomeWidgetState extends State<HomeWidget> {
   final List<Widget> _screens = [
     HomeContent(),              
     ClosetvirtualWidget(),
-    EmptyScreen('Análisis Cromático'),
-    EmptyScreen('Recomendaciones'),
-    EmptyScreen('Configuraciones'),
+    AnalisisCromaticoWidget(),
+    RecomendacionesWidget(),
+    ConfiguracionUsuarioWidget(),
   
   ];
 

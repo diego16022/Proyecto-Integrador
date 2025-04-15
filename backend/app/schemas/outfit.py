@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+from typing import List
 
 class OutfitBase(BaseModel):
     nombre: str
@@ -16,3 +17,8 @@ class OutfitOut(OutfitBase):
 
     class Config:
         from_attributes = True
+
+class OutfitCreate(BaseModel):
+    nombre: str
+    id_ocasion: int
+    ids_prendas: List[int]

@@ -1,11 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'models/prenda.dart';
 
 class PrendaService {
-  // Subir imagen a backend y obtener la URL
+  // Subir imagen
   static Future<String> uploadImage(File imageFile, int idUsuario) async {
     final uri = Uri.parse('http://10.0.2.2:8000/upload/image');
     var request = http.MultipartRequest('POST', uri);
@@ -21,7 +20,7 @@ class PrendaService {
     }
   }
 
-  // Crear nueva prenda
+  // Crear prenda
   static Future<void> crearPrenda({
     required String nombre,
     required String tipo,
@@ -33,22 +32,7 @@ class PrendaService {
     required int idEstilo,
   }) async {
     final url = Uri.parse('http://10.0.2.2:8000/prendas/');
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "nombre": nombre,
-        "tipo": tipo,
-        "color": color,
-        "temporada": temporada,
-        "estado_uso": estadoUso,
-        "imagen_url": imagenUrl,
-        "id_usuario": idUsuario,
-        "id_estilo": idEstilo,
-      }),
-    );
-
-    print("JSON enviado: ${jsonEncode({
+    final body = jsonEncode({
       "nombre": nombre,
       "tipo": tipo,
       "color": color,
@@ -57,14 +41,20 @@ class PrendaService {
       "imagen_url": imagenUrl,
       "id_usuario": idUsuario,
       "id_estilo": idEstilo,
-    })}");
+    });
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: body,
+    );
 
     if (response.statusCode != 201) {
       throw Exception("Error al guardar prenda: ${response.body}");
     }
   }
 
-  // Obtener todas las prendas del backend
+  // Obtener prendas
   static Future<List<Prenda>> obtenerPrendas() async {
     final url = Uri.parse('http://10.0.2.2:8000/prendas/');
     final response = await http.get(url);

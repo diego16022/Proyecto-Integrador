@@ -24,3 +24,4 @@ def upload_image_to_s3(file, id_usuario, folder="outfits"):
 
     image_url = f"https://{BUCKET_NAME}.s3.{os.getenv('AWS_REGION')}.amazonaws.com/{filename}"
     return image_url
+

@@ -14,3 +14,11 @@ async def upload_image(
 ):
     image_url = upload_image_to_s3(file, id_usuario)
     return {"url": image_url}
+
+@router.post("/image/users")
+async def upload_user_image(
+    id_usuario: int = Form(...),
+    file: UploadFile = File(...)
+):
+    image_url = upload_image_to_s3(file, id_usuario, folder="users")
+    return {"url": image_url}

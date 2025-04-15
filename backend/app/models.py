@@ -40,6 +40,7 @@ class Usuario(Base):
     contrasena = Column(String(100), nullable=False)
     tono_piel = Column(String(50))
     fecha_registro = Column(DateTime, server_default=func.now())
+    imagen_tono_piel = Column(String(255))
     # Relación con la tabla Prenda
     prendas = relationship("Prenda", back_populates="usuario")
     outfits = relationship("Outfit", back_populates="usuario")
