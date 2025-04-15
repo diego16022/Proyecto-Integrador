@@ -36,7 +36,40 @@ app.include_router(usuario.router, prefix="/usuarios", tags=["Usuarios"])
 app.include_router(prenda.router, prefix="/prendas", tags=["Prendas"])
 app.include_router(outfit.router, prefix="/outfits", tags=["Outfits"])
 ```
----
-##📤 Ejemplo de endpoint
 
+---
+## 📤 Ejemplo de endpoint
+**Ruta**: POST /usuarios/login
+```python
+@router.post("/login")
+def login_usuario(usuario: UsuarioLogin, db: Session = Depends(get_db)):
+    db_usuario = verificar_credenciales(db, usuario)
+    if not db_usuario:
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+    return generar_token(db_usuario)
+```
+**Request JSON:**
+```JSON
+{
+  "correo": "diego@email.com",
+  "contrasena": "123456"
+}
+```
+**Response JSON:**
+```JSON
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5...",
+  "token_type": "bearer"
+}
+```
+---
+## 🧠 Recomendaciones
+- `Se recomienda mantener una única responsabilidad por archivo.`
+- `Usar tags=["NombreGrupo"] para categorizar endpoints en Swagger.`
+- `Separar la lógica de negocio en crud/ y usar solo controladores aquí.`
+- `Utilizar dependencias como Depends(get_db) o Depends(get_current_user) para manejo de sesión y seguridad.`
+---
+Autor
+
+Diego Andrés Reinoso Calderón
 
