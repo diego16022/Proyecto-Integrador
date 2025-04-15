@@ -110,7 +110,10 @@ uvicorn app.main:app --reload
 
 ---
 👨‍💻 Autor
--Diego Andrés Reinoso Calderón/n
--Ingeniería en Ciencias de la Computación
--Universidad San Francisco de Quito
--Tutor: Felipe Grijalva Arévalo
+Diego Andrés Reinoso Calderón
+
+Ingeniería en Ciencias de la Computación
+
+Universidad San Francisco de Quito
+
+Tutor: Felipe Grijalva Arévalo
