@@ -12,6 +12,7 @@ from PIL import Image
 import torch
 from torchvision import transforms
 from app.modelos.modelo_skin import SkinTypeClassifier
+import random
 
 
 router = APIRouter(

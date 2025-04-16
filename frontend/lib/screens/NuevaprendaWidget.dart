@@ -54,6 +54,14 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
     {"id": 6, "nombre": "Loose Fit"},
     {"id": 7, "nombre": "Wide Leg"},
   ];
+  final List<Color> coloresPermitidos = [
+  Color(0x000080), Color(0xFF00FF), Color(0xFFFFFF), Color(0x000000), Color(0xFA8072),
+  Color(0xFFC0CB), Color(0xE6E6FA), Color(0xDCDCDC), Color(0x9DC183), Color(0xF4A460),
+  Color(0xFF7F50), Color(0x98FF98), Color(0x87CEEB), Color(0x40E0D0), Color(0x8B4513),
+  Color(0xE2725B), Color(0x808000), Color(0xA0522D), Color(0xFFDB58), Color(0x795548),
+  Color(0xB22222), Color(0x228B22), Color(0xFFBF00), Color(0x7B3F00),
+  Color(0x0047AB), Color(0x50C878), Color(0x0A0A0A), Color(0x3E3E3E),];
+
 
   Future<void> _pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -144,6 +152,7 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
                       content: SingleChildScrollView(
                         child: BlockPicker(
                           pickerColor: _color ?? Colors.blue,
+                          availableColors: coloresPermitidos,
                           onColorChanged: (color) => setState(() => _color = color),
                         ),
                       ),

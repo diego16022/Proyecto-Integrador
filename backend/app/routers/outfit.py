@@ -5,7 +5,7 @@ from .. import schemas, crud, database
 from .. import models, schemas
 from fastapi import HTTPException
 from ..database import get_db
-
+import random
 
 router = APIRouter(
     prefix="/outfits",
@@ -76,21 +76,24 @@ def generar_outfit(usuario_id: int, db: Session = Depends(get_db)):
     }
 
     colores = colores_favorables.get(tipo_piel, [])
-    camisa = db.query(models.Prenda).filter(
+    camisas = db.query(models.Prenda).filter(
         models.Prenda.tipo == "Camisa",
         models.Prenda.color.in_(colores),
         models.Prenda.id_usuario == usuario_id
-    ).first()
+    ).all()
+    camisa = random.choice(camisas) if camisas else None
 
-    pantalon = db.query(models.Prenda).filter(
+    pantalones = db.query(models.Prenda).filter(
         models.Prenda.tipo == "Pantalon",
         models.Prenda.id_usuario == usuario_id
-    ).first()
+    ).all()
+    pantalon = random.choice(pantalones) if pantalones else None
 
-    zapatos = db.query(models.Prenda).filter(
+    zapatos_list = db.query(models.Prenda).filter(
         models.Prenda.tipo == "Zapatos",
         models.Prenda.id_usuario == usuario_id
-    ).first()
+    ).all()
+    zapatos = random.choice(zapatos_list) if zapatos_list else None
 
     if not camisa or not pantalon or not zapatos:
         raise HTTPException(status_code=404, detail="No hay suficientes prendas")
