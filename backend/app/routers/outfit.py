@@ -6,6 +6,23 @@ from .. import models, schemas
 from fastapi import HTTPException
 from ..database import get_db
 import random
+from collections import Counter
+
+def obtener_ocasion_comun(db: Session, prendas: List[models.Prenda]) -> int:
+    todas_ocasiones = []
+
+    for prenda in prendas:
+        asociaciones = db.query(models.Prenda_Ocasion).filter(
+            models.Prenda_Ocasion.id_prenda == prenda.id_prenda
+        ).all()
+        for asociacion in asociaciones:
+            todas_ocasiones.append(asociacion.id_ocasion)
+
+    if not todas_ocasiones:
+        return 1  # Default ocasión (e.g., "Casual")
+
+    mas_comun = Counter(todas_ocasiones).most_common(1)[0][0]
+    return mas_comun
 
 router = APIRouter(
     prefix="/outfits",
@@ -31,6 +48,7 @@ def update_outfit(outfit_id: int, outfit_update: schemas.OutfitCreate, db: Sessi
 @router.delete("/{outfit_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_outfit(outfit_id: int, db: Session = Depends(database.get_db)):
     return crud.crud_outfit.delete_outfit(db, outfit_id)
+
 @router.post("/{id_usuario}/guardar-outfit")
 def guardar_outfit(
     id_usuario: int,
@@ -111,26 +129,37 @@ def generar_outfit(usuario_id: int, db: Session = Depends(get_db)):
 
 @router.post("/aceptar/{usuario_id}", status_code=201)
 def aceptar_outfit(usuario_id: int, db: Session = Depends(get_db)):
-    # Obtener últimas prendas sugeridas
-    # Esto se puede mejorar con caché o paso previo
-    camisa = ...
-    pantalon = ...
-    zapatos = ...
+    # Recuperar las prendas más recientes sugeridas
+    camisa = db.query(models.Prenda).filter(
+        models.Prenda.tipo == "Camisa", models.Prenda.id_usuario == usuario_id
+    ).first()
+    pantalon = db.query(models.Prenda).filter(
+        models.Prenda.tipo == "Pantalon", models.Prenda.id_usuario == usuario_id
+    ).first()
+    zapatos = db.query(models.Prenda).filter(
+        models.Prenda.tipo == "Zapatos", models.Prenda.id_usuario == usuario_id
+    ).first()
+
+    if not camisa or not pantalon or not zapatos:
+        raise HTTPException(status_code=404, detail="Faltan prendas para guardar outfit")
+
+    # ✅ Obtener la ocasión más común entre las prendas
+    id_ocasion = obtener_ocasion_comun(db, [camisa, pantalon, zapatos])
 
     nuevo_outfit = models.Outfit(
         id_usuario=usuario_id,
         nombre="Outfit generado",
-        id_ocasion=1  # predeterminada
+        id_ocasion=id_ocasion
     )
     db.add(nuevo_outfit)
     db.commit()
     db.refresh(nuevo_outfit)
 
     for prenda in [camisa, pantalon, zapatos]:
-        detalle = models.DetalleOutfit(id_outfit=nuevo_outfit.id_outfit, id_prenda=prenda.id_prenda)
+        detalle = models.Detalle_Outfit(id_outfit=nuevo_outfit.id_outfit, id_prenda=prenda.id_prenda)
         db.add(detalle)
 
-    recomendacion = models.Recomendacion(
+    recomendacion = models.Recomendaciones(
         id_usuario=usuario_id,
         id_outfit=nuevo_outfit.id_outfit,
         feedback_usuario="aceptado"

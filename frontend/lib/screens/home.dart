@@ -5,8 +5,6 @@ import 'closetvirtual_widget.dart';
 import 'analisi_cromatico.dart';
 import 'recomendaciones_widget.dart';
 import 'configuraciones_widget.dart';
-import 'package:frontend/screens/closetvirtual_widget.dart';
-import 'package:frontend/screens/analisi_cromatico.dart';
 
 
 class HomeWidget extends StatefulWidget {
@@ -16,6 +14,15 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
   int selectedIndex = 0;
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is int) {
+      selectedIndex = args;
+    }
+  }
 
   final List<String> iconPaths = [
     'assets/icons/casa_home.svg',

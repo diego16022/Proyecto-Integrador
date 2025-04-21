@@ -5,22 +5,22 @@ import 'package:frontend/services/usuario_service.dart';
 import 'package:frontend/services/auth_service.dart'; 
 
 final Map<String, List<Color>> coloresPorTono = {
-  'Tipo_I': [
+  'Tipo I': [
     Color(0xFF000080), Color(0xFFFF00FF), Color(0xFFFFFFFF), Color(0xFF000000)
   ],
-  'Tipo_II': [
+  'Tipo II': [
     Color(0xFFFFC0CB), Color(0xFFE6E6FA), Color(0xFFDCDCDC), Color(0xFF9DC183)
   ],
-  'Tipo_III': [
+  'Tipo III': [
     Color(0xFFFF7F50), Color(0xFF98FF98), Color(0xFF87CEEB), Color(0xFF40E0D0)
   ],
-  'Tipo_IV': [
+  'Tipo IV': [
     Color(0xFFE2725B), Color(0xFF808000), Color(0xFFA0522D), Color(0xFFFFDB58)
   ],
-  'Tipo_V': [
+  'Tipo V': [
     Color(0xFFB22222), Color(0xFF228B22), Color(0xFFFFBF00), Color(0xFF7B3F00)
   ],
-  'Tipo_VI': [
+  'Tipo VI': [
     Color(0xFF0047AB), Color(0xFF50C878), Color(0xFF8A2BE2), Color(0xFFC0C0C0)
   ],
 };

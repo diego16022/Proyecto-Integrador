@@ -22,35 +22,37 @@ class PrendaService {
 
   // Crear prenda
   static Future<void> crearPrenda({
-    required String nombre,
-    required String tipo,
-    required String color,
-    required String temporada,
-    required String estadoUso,
-    required int idUsuario,
-    required String? imagenUrl,
-    required int idEstilo,
+  required String nombre,
+  required String tipo,
+  required String color,
+  required String temporada,
+  required String estadoUso,
+  required int idUsuario,
+  required String? imagenUrl,
+  required int idEstilo,
+  required int idOcasion, 
   }) async {
-    final url = Uri.parse('http://10.0.2.2:8000/prendas/');
-    final body = jsonEncode({
-      "nombre": nombre,
-      "tipo": tipo,
-      "color": color,
-      "temporada": temporada,
-      "estado_uso": estadoUso,
-      "imagen_url": imagenUrl,
-      "id_usuario": idUsuario,
-      "id_estilo": idEstilo,
-    });
+  final url = Uri.parse('http://10.0.2.2:8000/prendas/');
+  final body = jsonEncode({
+    "nombre": nombre,
+    "tipo": tipo,
+    "color": color,
+    "temporada": temporada,
+    "estado_uso": estadoUso,
+    "imagen_url": imagenUrl,
+    "id_usuario": idUsuario,
+    "id_estilo": idEstilo,
+    "id_ocasion": idOcasion, 
+  });
 
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: body,
-    );
+  final response = await http.post(
+    url,
+    headers: {"Content-Type": "application/json"},
+    body: body,
+  );
 
-    if (response.statusCode != 201) {
-      throw Exception("Error al guardar prenda: ${response.body}");
+  if (response.statusCode != 201) {
+    throw Exception("Error al guardar prenda: ${response.body}");
     }
   }
 

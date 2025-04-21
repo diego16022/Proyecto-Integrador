@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../services/outfit_service.dart';
 import '../services/auth_service.dart';
+import '../services/models/recomendacion_cache.dart';
 
 class RecomendacionesWidget extends StatefulWidget {
   @override
@@ -9,20 +10,7 @@ class RecomendacionesWidget extends StatefulWidget {
 }
 
 class _RecomendacionesWidgetState extends State<RecomendacionesWidget> {
-  String imagenOutfit = "";
-  String tonoPiel = "";
   bool cargando = false;
-  List<Color> colores = [];
-  List<String> imagenesPrendas = [];
-
-  final Map<String, List<Color>> coloresPorTono = {
-    'Tipo_I': [Color(0xFF000080), Color(0xFFFF00FF), Color(0xFFFFFFFF), Color(0xFF000000), Color(0xFFFA8072)],
-    'Tipo_II': [Color(0xFFFFC0CB), Color(0xFFE6E6FA), Color(0xFFDCDCDC), Color(0xFF9DC183), Color(0xFFF4A460)],
-    'Tipo_III': [Color(0xFFFF7F50), Color(0xFF98FF98), Color(0xFF87CEEB), Color(0xFF40E0D0), Color(0xFF8B4513)],
-    'Tipo_IV': [Color(0xFFE2725B), Color(0xFF808000), Color(0xFFA0522D), Color(0xFFFFDB58), Color(0xFF795548)],
-    'Tipo_V': [Color(0xFFB22222), Color(0xFF228B22), Color(0xFFFFBF00), Color(0xFF7B3F00), Color(0xFF000000)],
-    'Tipo_VI': [Color(0xFF0047AB), Color(0xFF50C878), Color(0xFF0A0A0A), Color(0xFF000000), Color(0xFF3E3E3E)],
-  };
 
   Future<void> _generarNuevoOutfit() async {
     final idUsuario = SesionUsuario.idUsuario;
@@ -32,18 +20,19 @@ class _RecomendacionesWidgetState extends State<RecomendacionesWidget> {
 
     try {
       final data = await OutfitService.generarOutfitAleatorio(idUsuario);
-      setState(() {
-        imagenOutfit = data['imagen_outfit'];
-        tonoPiel = data['tono_piel'];
-        colores = coloresPorTono[tonoPiel] ?? [];
-        imagenesPrendas = List<String>.from(data['imagenes_prendas'] ?? []);
-      });
+
+      RecomendacionCache.imagenOutfit = data['imagen_outfit'];
+      RecomendacionCache.tonoPiel = data['tono_piel'];
+      RecomendacionCache.imagenesPrendas = List<String>.from(data['imagenes_prendas'] ?? []);
+      RecomendacionCache.colores = coloresPorTono[data['tono_piel']] ?? [];
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al generar outfit')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al generar outfit')),
+        );
+      }
     } finally {
-      setState(() => cargando = false);
+      if (mounted) setState(() => cargando = false);
     }
   }
 
@@ -63,11 +52,14 @@ class _RecomendacionesWidgetState extends State<RecomendacionesWidget> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _generarNuevoOutfit();
-  }
+  final Map<String, List<Color>> coloresPorTono = {
+    'Tipo I': [Color(0xFF000080), Color(0xFFFF00FF), Color(0xFFFFFFFF), Color(0xFF000000), Color(0xFFFA8072)],
+    'Tipo II': [Color(0xFFFFC0CB), Color(0xFFE6E6FA), Color(0xFFDCDCDC), Color(0xFF9DC183), Color(0xFFF4A460)],
+    'Tipo III': [Color(0xFFFF7F50), Color(0xFF98FF98), Color(0xFF87CEEB), Color(0xFF40E0D0), Color(0xFF8B4513)],
+    'Tipo IV': [Color(0xFFE2725B), Color(0xFF808000), Color(0xFFA0522D), Color(0xFFFFDB58), Color(0xFF795548)],
+    'Tipo V': [Color(0xFFB22222), Color(0xFF228B22), Color(0xFFFFBF00), Color(0xFF7B3F00), Color(0xFF000000)],
+    'Tipo VI': [Color(0xFF0047AB), Color(0xFF50C878), Color(0xFF0A0A0A), Color(0xFF000000), Color(0xFF3E3E3E)],
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +68,7 @@ class _RecomendacionesWidgetState extends State<RecomendacionesWidget> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -85,18 +77,20 @@ class _RecomendacionesWidgetState extends State<RecomendacionesWidget> {
                 Text('VESTIMENTA DEL DIA DE HOY', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                 SizedBox(height: 16),
 
-                // Imagen principal
+                // Imagen del outfit
                 Container(
                   height: 250,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Color(0xFFEEEEEE),
                     borderRadius: BorderRadius.circular(20),
-                    image: imagenOutfit.isNotEmpty
-                        ? DecorationImage(image: NetworkImage(imagenOutfit), fit: BoxFit.cover)
+                    image: RecomendacionCache.imagenOutfit.isNotEmpty
+                        ? DecorationImage(image: NetworkImage(RecomendacionCache.imagenOutfit), fit: BoxFit.cover)
                         : null,
                   ),
-                  child: imagenOutfit.isEmpty ? Center(child: Text("Imagen no disponible")) : null,
+                  child: RecomendacionCache.imagenOutfit.isEmpty
+                      ? Center(child: Text("Imagen no disponible"))
+                      : null,
                 ),
 
                 SizedBox(height: 24),
@@ -129,17 +123,17 @@ class _RecomendacionesWidgetState extends State<RecomendacionesWidget> {
 
                 SizedBox(height: 24),
 
-                // 🧥 Prendas individuales
+                // Lista de prendas
                 Text("Prendas del Outfit", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
                 SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(
-                    imagenesPrendas.length,
+                    RecomendacionCache.imagenesPrendas.length,
                     (index) => ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.network(
-                        imagenesPrendas[index],
+                        RecomendacionCache.imagenesPrendas[index],
                         height: 80,
                         width: 80,
                         fit: BoxFit.cover,
@@ -150,17 +144,17 @@ class _RecomendacionesWidgetState extends State<RecomendacionesWidget> {
 
                 SizedBox(height: 24),
 
-                // 🎨 Colores recomendados
+                // Colores recomendados
                 Text("Colores que te favorecen", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: List.generate(
-                      colores.length,
+                      RecomendacionCache.colores.length,
                       (index) => CircleAvatar(
                         radius: 25,
-                        backgroundColor: colores[index],
+                        backgroundColor: RecomendacionCache.colores[index],
                       ),
                     ),
                   ),

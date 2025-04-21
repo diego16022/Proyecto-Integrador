@@ -7,12 +7,14 @@ from ..schemas import UsuarioCreate, UsuarioOut
 from.. schemas import UsuarioLogin
 from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.utils.s3_upload import upload_image_to_s3
+from app.utils.s3_upload import upload_image_to_s3, upload_base64_image_to_s3
 from PIL import Image
 import torch
 from torchvision import transforms
 from app.modelos.modelo_skin import SkinTypeClassifier
 import random
+import requests
+
 
 
 router = APIRouter(
@@ -50,28 +52,13 @@ def login(usuario: UsuarioLogin, db: Session = Depends(database.get_db)):
     return {"message": "Inicio de sesión exitoso", "usuario_id": user.id_usuario}
 
 
-# Cargar modelo una vez
-modelo = SkinTypeClassifier()
-modelo.load_state_dict(torch.load("app/modelos/skin_type_model.pt", map_location=torch.device("cpu")))
-modelo.eval()
-
-# Mapeo de clases
-label_mapping = {
-    0: 'Tipo_I',
-    1: 'Tipo_II',
-    2: 'Tipo_III',
-    3: 'Tipo_IV',
-    4: 'Tipo_V',
-    5: 'Tipo_VI'
-}
-
-# Transformación imagen
-val_transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0.224, 0.225])
-])
+def obtener_tono_piel_desde_api(file: UploadFile) -> dict:
+    url = "http://52.14.66.242:8000/predict"  # IP pública de EC2
+    response = requests.post(url, files={"file": (file.filename, file.file, file.content_type)})
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise HTTPException(status_code=500, detail=f"Error al predecir tono de piel: {response.text}")
 
 @router.post("/{usuario_id}/analisis-cromatico")
 async def analizar_y_guardar(
@@ -84,27 +71,27 @@ async def analizar_y_guardar(
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-    # 2. Cargar imagen y aplicar transformación
-    image = Image.open(file.file).convert("RGB")
-    tensor = val_transform(image).unsqueeze(0)
+    # 2. Predecir tono de piel desde el microservicio
+    resultado = obtener_tono_piel_desde_api(file)
+    tono_piel = resultado["descripcion"]
+    rostro_base64 = resultado["rostro_base64"]
 
-    # 3. Predicción
-    with torch.no_grad():
-        output = modelo(tensor)
-        pred = torch.argmax(output, dim=1).item()
-        tipo_piel = label_mapping[pred]
-
-    # 4. Subida a S3
+    # 3. Subida a S3
     file.file.seek(0)  # Reiniciar el puntero del archivo
     image_url = upload_image_to_s3(file, usuario_id, folder="users")
 
+    # 4. Subida del rostro recortado a S3
+    recorte_url = upload_base64_image_to_s3(rostro_base64, usuario_id, folder="users/recortes")
+
     # 5. Guardar en la base de datos
-    usuario.tono_piel = tipo_piel
+    usuario.tono_piel = tono_piel
     usuario.foto_url = image_url
     db.commit()
 
+
     return {
         "message": "Análisis cromático realizado y guardado",
-        "tono_piel": tipo_piel,
-        "foto_url": image_url
+        "tono_piel": tono_piel,
+        "foto_url": image_url,
+        "rostro_url": recorte_url
     }

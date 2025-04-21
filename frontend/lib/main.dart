@@ -3,6 +3,8 @@ import 'package:frontend/screens/closetvirtual_widget.dart';
 import 'screens/inicio_aplicacion.dart';
 import 'screens/inicio_sesion_widget.dart';
 import 'screens/crear_cuenta.dart';
+import 'screens/home.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const InicioSesionWidget(),
         '/register': (context) => const CrearCuentaWidget(),
         '/closet': (context) => ClosetvirtualWidget(),
+        '/home': (context) => HomeWidget(), 
       },
     );
   }

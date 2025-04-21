@@ -10,7 +10,7 @@ from .routers import metrica_uso
 from .routers import prenda_ocasion
 from .routers import historial_uso
 from .routers import upload
-from .routers import prediccion
+
 
 
 
@@ -28,7 +28,6 @@ app.include_router(metrica_uso.router)
 app.include_router(prenda_ocasion.router)
 app.include_router(historial_uso.router)
 app.include_router(upload.router)
-app.include_router(prediccion.router)
 
 
 @app.get("/")

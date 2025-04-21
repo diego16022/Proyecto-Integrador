@@ -2,6 +2,8 @@
 import boto3
 import uuid
 import os
+import base64
+import io
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -25,3 +27,14 @@ def upload_image_to_s3(file, id_usuario, folder="outfits"):
     image_url = f"https://{BUCKET_NAME}.s3.{os.getenv('AWS_REGION')}.amazonaws.com/{filename}"
     return image_url
 
+def upload_base64_image_to_s3(base64_str, id_usuario, folder="users/recortes"):
+    ext = "jpg"
+    filename = f"{folder}/user_{id_usuario}/{uuid.uuid4()}.{ext}"
+
+    image_data = base64.b64decode(base64_str)
+    file_obj = io.BytesIO(image_data)
+
+    s3.upload_fileobj(file_obj, BUCKET_NAME, filename, ExtraArgs={"ContentType": "image/jpeg"})
+
+    image_url = f"https://{BUCKET_NAME}.s3.{os.getenv('AWS_REGION')}.amazonaws.com/{filename}"
+    return image_url

@@ -5,24 +5,17 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:frontend/services/prenda_service.dart';
 import 'package:frontend/services/auth_service.dart' as auth;
 
-
-
 enum TipoPrendaEnum { Camisa, Pantalon, Zapatos, Accesorios }
 enum TemporadaEnum { Verano, Invierno, Otono, Primavera, Todo_el_ano }
 enum EstadoUsoEnum { Nuevo, Poco_usado, Usado, Viejo }
 
 String mapTemporada(TemporadaEnum temporada) {
   switch (temporada) {
-    case TemporadaEnum.Verano:
-      return "Verano";
-    case TemporadaEnum.Invierno:
-      return "Invierno";
-    case TemporadaEnum.Otono:
-      return "Otoño";
-    case TemporadaEnum.Primavera:
-      return "Primavera";
-    case TemporadaEnum.Todo_el_ano:
-      return "Todo el año";
+    case TemporadaEnum.Verano: return "Verano";
+    case TemporadaEnum.Invierno: return "Invierno";
+    case TemporadaEnum.Otono: return "Otoño";
+    case TemporadaEnum.Primavera: return "Primavera";
+    case TemporadaEnum.Todo_el_ano: return "Todo el año";
   }
 }
 
@@ -40,11 +33,9 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
   File? _imageFile;
   ImageProvider? _imagen;
   int? _idEstiloSeleccionado;
+  int? _idOcasionSeleccionada;
 
   final picker = ImagePicker();
-
-  
-
 
   final List<Map<String, dynamic>> estilos = [
     {"id": 2, "nombre": "Regular Fit"},
@@ -54,14 +45,23 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
     {"id": 6, "nombre": "Loose Fit"},
     {"id": 7, "nombre": "Wide Leg"},
   ];
-  final List<Color> coloresPermitidos = [
-  Color(0x000080), Color(0xFF00FF), Color(0xFFFFFF), Color(0x000000), Color(0xFA8072),
-  Color(0xFFC0CB), Color(0xE6E6FA), Color(0xDCDCDC), Color(0x9DC183), Color(0xF4A460),
-  Color(0xFF7F50), Color(0x98FF98), Color(0x87CEEB), Color(0x40E0D0), Color(0x8B4513),
-  Color(0xE2725B), Color(0x808000), Color(0xA0522D), Color(0xFFDB58), Color(0x795548),
-  Color(0xB22222), Color(0x228B22), Color(0xFFBF00), Color(0x7B3F00),
-  Color(0x0047AB), Color(0x50C878), Color(0x0A0A0A), Color(0x3E3E3E),];
 
+  final List<Map<String, dynamic>> ocasiones = [
+    {"id": 1, "nombre": "Formal"},
+    {"id": 2, "nombre": "Deportivo"},
+    {"id": 3, "nombre": "Fiesta"},
+    {"id": 4, "nombre": "Cualquier Ocasión"},
+    {"id": 5, "nombre": "Casual"},
+  ];
+
+  final List<Color> coloresPermitidos = [
+    Color(0xFF000080), Color(0xFFFF00FF), Color(0xFFFFFFFF), Color(0xFF000000), Color(0xFFFA8072),
+    Color(0xFFFFC0CB), Color(0xFFE6E6FA), Color(0xFFDCDCDC), Color(0xFF9DC183), Color(0xFFF4A460),
+    Color(0xFFFF7F50), Color(0xFF98FF98), Color(0xFF87CEEB), Color(0xFF40E0D0), Color(0xFF8B4513),
+    Color(0xFFE2725B), Color(0xFF808000), Color(0xFFA0522D), Color(0xFFFFDB58), Color(0xFF795548),
+    Color(0xFFB22222), Color(0xFF228B22), Color(0xFFFFBF00), Color(0xFF7B3F00),
+    Color(0xFF0047AB), Color(0xFF50C878), Color(0xFF0A0A0A), Color(0xFF3E3E3E),
+  ];
 
   Future<void> _pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -86,15 +86,7 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const Text(
-                'Agregar Nueva Prenda',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2C3E50),
-                ),
-              ),
+              const Text('Agregar Nueva Prenda', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF2C3E50))),
               const SizedBox(height: 10),
 
               TextField(
@@ -104,9 +96,7 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
                   filled: true,
                   fillColor: const Color(0xFF666666),
                   labelStyle: const TextStyle(color: Color(0xFF9D9A9A)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                 ),
               ),
               const SizedBox(height: 10),
@@ -119,27 +109,18 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
-                    image: _imagen != null
-                        ? DecorationImage(image: _imagen!, fit: BoxFit.cover)
-                        : null,
+                    image: _imagen != null ? DecorationImage(image: _imagen!, fit: BoxFit.cover) : null,
                   ),
                   child: _imagen == null
-                      ? const Center(
-                          child: Icon(Icons.camera_alt, size: 50, color: Colors.grey),
-                        )
+                      ? const Center(child: Icon(Icons.camera_alt, size: 50, color: Colors.grey))
                       : null,
                 ),
               ),
               const SizedBox(height: 10),
 
-              _buildDropdown<TipoPrendaEnum>('Tipo', TipoPrendaEnum.values, _tipo,
-                  (val) => setState(() => _tipo = val)),
-
-              _buildDropdown<EstadoUsoEnum>('Estado de uso', EstadoUsoEnum.values, _estado,
-                  (val) => setState(() => _estado = val)),
-
-              _buildDropdown<TemporadaEnum>('Temporada', TemporadaEnum.values, _temporada,
-                  (val) => setState(() => _temporada = val)),
+              _buildDropdown<TipoPrendaEnum>('Tipo', TipoPrendaEnum.values, _tipo, (val) => setState(() => _tipo = val)),
+              _buildDropdown<EstadoUsoEnum>('Estado de uso', EstadoUsoEnum.values, _estado, (val) => setState(() => _estado = val)),
+              _buildDropdown<TemporadaEnum>('Temporada', TemporadaEnum.values, _temporada, (val) => setState(() => _temporada = val)),
 
               const SizedBox(height: 10),
 
@@ -185,31 +166,8 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
 
               const SizedBox(height: 10),
 
-              // Dropdown de Estilo (Fit)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: DropdownButtonFormField<int>(
-                  decoration: InputDecoration(
-                    labelText: "Estilo (Fit)",
-                    filled: true,
-                    fillColor: const Color(0xFF666666),
-                    labelStyle: const TextStyle(color: Colors.white),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  value: _idEstiloSeleccionado,
-                  items: estilos.map((estilo) {
-                    return DropdownMenuItem<int>(
-                      value: estilo["id"],
-                      child: Text(estilo["nombre"]),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      _idEstiloSeleccionado = val;
-                    });
-                  },
-                ),
-              ),
+              _buildDropdownForm("Estilo (Fit)", estilos, _idEstiloSeleccionado, (val) => setState(() => _idEstiloSeleccionado = val)),
+              _buildDropdownForm("Ocasión", ocasiones, _idOcasionSeleccionada, (val) => setState(() => _idOcasionSeleccionada = val)),
 
               const SizedBox(height: 20),
 
@@ -222,28 +180,21 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
                     onTap: () async {
                       try {
                         String? uploadedImageUrl;
-                        
-
                         if (_imageFile != null) {
-                          uploadedImageUrl = await PrendaService.uploadImage(_imageFile!, 1);
+                          uploadedImageUrl = await PrendaService.uploadImage(_imageFile!, auth.SesionUsuario.idUsuario!);
                         }
-                        print("_nombre: $_nombre");
-                        print("_tipo: $_tipo");
-                        print("_estado: $_estado");
-                        print("_temporada: $_temporada");
-                        print("_color: $_color");
-                        print("_idEstiloSeleccionado: $_idEstiloSeleccionado");
-                        print("uploadedImageUrl: $uploadedImageUrl");
-                        print("idUsuario: ${auth.SesionUsuario.idUsuario}");
+
+                        // Lógica para guardar prenda
                         await PrendaService.crearPrenda(
                           nombre: _nombre!,
-                          tipo: _tipo!.name.toString().split('.').last,
+                          tipo: _tipo!.name,
                           color: '#${_color!.value.toRadixString(16).padLeft(8, '0').substring(2)}',
                           temporada: mapTemporada(_temporada!),
-                          estadoUso: _estado!.name.toString().split('.').last.replaceAll('_', ' '),
+                          estadoUso: _estado!.name.replaceAll('_', ' '),
                           idUsuario: auth.SesionUsuario.idUsuario!,
                           imagenUrl: uploadedImageUrl,
                           idEstilo: _idEstiloSeleccionado!,
+                          idOcasion: _idOcasionSeleccionada!, // 👈 nuevo campo
                         );
 
                         Navigator.pop(context);
@@ -269,8 +220,7 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
     );
   }
 
-  Widget _buildDropdown<T>(
-      String label, List<T> items, T? value, Function(T?) onChanged) {
+  Widget _buildDropdown<T>(String label, List<T> items, T? value, Function(T?) onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: DropdownButtonFormField<T>(
@@ -282,12 +232,38 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         value: value,
-        items: items
-            .map((e) => DropdownMenuItem<T>(
-                  value: e,
-                  child: Text(e.toString().split('.').last),
-                ))
-            .toList(),
+        items: items.map((e) => DropdownMenuItem<T>(
+          value: e,
+          child: Text(e.toString().split('.').last),
+        )).toList(),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildDropdownForm(
+    String label,
+    List<Map<String, dynamic>> items,
+    int? selectedValue,
+    Function(int?) onChanged,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: DropdownButtonFormField<int>(
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: const Color(0xFF666666),
+          labelStyle: const TextStyle(color: Colors.white),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        value: selectedValue,
+        items: items.map((item) {
+          return DropdownMenuItem<int>(
+            value: item["id"],
+            child: Text(item["nombre"]),
+          );
+        }).toList(),
         onChanged: onChanged,
       ),
     );
