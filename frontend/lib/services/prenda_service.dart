@@ -21,7 +21,7 @@ class PrendaService {
   }
 
   // Crear prenda
-  static Future<void> crearPrenda({
+  static Future<int> crearPrenda({
   required String nombre,
   required String tipo,
   required String color,
@@ -30,7 +30,6 @@ class PrendaService {
   required int idUsuario,
   required String? imagenUrl,
   required int idEstilo,
-  required int idOcasion, 
   }) async {
   final url = Uri.parse('http://10.0.2.2:8000/prendas/');
   final body = jsonEncode({
@@ -41,8 +40,7 @@ class PrendaService {
     "estado_uso": estadoUso,
     "imagen_url": imagenUrl,
     "id_usuario": idUsuario,
-    "id_estilo": idEstilo,
-    "id_ocasion": idOcasion, 
+    "id_estilo": idEstilo, 
   });
 
   final response = await http.post(
@@ -50,14 +48,38 @@ class PrendaService {
     headers: {"Content-Type": "application/json"},
     body: body,
   );
-
-  if (response.statusCode != 201) {
+  if (response.statusCode == 201) {
+    final data = jsonDecode(response.body);
+    return data["id_prenda"];
+    } else {
     throw Exception("Error al guardar prenda: ${response.body}");
     }
   }
-
   // Obtener prendas
-  static Future<List<Prenda>> obtenerPrendas() async {
+  static Future<void> actualizarPrenda(Prenda prenda) async {
+  final url = Uri.parse('http://10.0.2.2:8000/prendas/${prenda.id}');
+  final body = jsonEncode({
+    "nombre": prenda.nombre,
+    "tipo": prenda.tipo,
+    "color": prenda.color,
+    "temporada": prenda.temporada,
+    "estado_uso": prenda.estadoUso,
+    "imagen_url": prenda.imagenUrl,
+    "id_usuario": prenda.idUsuario,
+    "id_estilo": prenda.idEstilo,
+  });
+
+  final response = await http.put(
+    url,
+    headers: {"Content-Type": "application/json"},
+    body: body,
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception("Error al actualizar prenda: ${response.body}");
+    }
+  }
+   static Future<List<Prenda>> obtenerPrendas() async {
     final url = Uri.parse('http://10.0.2.2:8000/prendas/');
     final response = await http.get(url);
 
@@ -67,5 +89,14 @@ class PrendaService {
     } else {
       throw Exception('Error al obtener prendas: ${response.body}');
     }
+  }
+  static Future<void> asociarOcasion(int prendaId, int ocasionId) async {
+  final url = Uri.parse('http://10.0.2.2:8000/prendas/asociar_ocasion/?prenda_id=$prendaId&ocasion_id=$ocasionId');
+  
+  final response = await http.post(url); 
+
+  if (response.statusCode != 201) {
+    throw Exception('Error al asociar ocasión: ${response.body}');
+  }
   }
 }

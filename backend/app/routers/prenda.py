@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from .. import schemas, crud, database
+from ..models import Prenda_Ocasion
 
 router = APIRouter(
     prefix="/prendas",
@@ -33,3 +34,10 @@ def read_prendas_por_usuario(id_usuario: int, db: Session = Depends(database.get
     if not prendas:
         raise HTTPException(status_code=404, detail="No se encontraron prendas para este usuario")
     return prendas
+
+@router.post("/asociar_ocasion/", status_code=201)
+def asociar_ocasion(prenda_id: int, ocasion_id: int, db: Session =  Depends(database.get_db)):
+    nueva_asociacion = Prenda_Ocasion(id_prenda=prenda_id, id_ocasion=ocasion_id)
+    db.add(nueva_asociacion)
+    db.commit()
+    return {"mensaje": "Asociación registrada correctamente"}

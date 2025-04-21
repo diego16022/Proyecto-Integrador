@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/services/models/prenda.dart';
 import 'package:frontend/screens/NuevaprendaWidget.dart';
+import 'package:frontend/screens/EditarPrendaWidget.dart';
 import 'package:frontend/services/prenda_service.dart';
 
 class ClosetvirtualWidget extends StatefulWidget {
@@ -134,8 +135,7 @@ class _ClosetvirtualWidgetState extends State<ClosetvirtualWidget> {
           seleccionado: _categoriaSeleccionada == categoria,
           onTap: () {
             setState(() {
-              _categoriaSeleccionada =
-                  _categoriaSeleccionada == categoria ? '' : categoria;
+              _categoriaSeleccionada = _categoriaSeleccionada == categoria ? '' : categoria;
               _filtrarPrendas();
             });
           },
@@ -166,18 +166,32 @@ class _ClosetvirtualWidgetState extends State<ClosetvirtualWidget> {
         ),
         itemBuilder: (_, index) {
           final prenda = prendas[index];
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [
-                BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 4))
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: prenda.imagenUrl != null
-                  ? Image.network(prenda.imagenUrl!, fit: BoxFit.cover)
-                  : Container(color: const Color(0xFFD9D9D9)),
+          return GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (_) => Dialog(
+                  backgroundColor: Colors.transparent,
+                  child: EditarPrendaWidget(
+                    prenda: prenda,
+                    onPrendaActualizada: cargarPrendas,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: const [
+                  BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 4))
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: prenda.imagenUrl != null
+                    ? Image.network(prenda.imagenUrl!, fit: BoxFit.cover)
+                    : Container(color: const Color(0xFFD9D9D9)),
+              ),
             ),
           );
         },

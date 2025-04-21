@@ -27,7 +27,6 @@ class PrendaBase(BaseModel):
 class PrendaCreate(PrendaBase):
     id_usuario: int
     id_estilo: int
-    id_ocasion: int
 
 class PrendaOut(PrendaBase):
     id_prenda: int
