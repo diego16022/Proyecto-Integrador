@@ -58,9 +58,9 @@ class _NuevaPrendaWidgetState extends State<NuevaPrendaWidget> {
     Color(0xFF000080), Color(0xFFFF00FF), Color(0xFFFFFFFF), Color(0xFF000000),
     Color(0xFFFFC0CB), Color(0xFFE6E6FA), Color(0xFFDCDCDC), Color(0xFF9DC183),
     Color(0xFFFF7F50), Color(0xFF98FF98), Color(0xFF87CEEB), Color(0xFF40E0D0),
-    Color(0xFFE2725B), Color(0xFFA0522D), Color(0xFFFFDB58), Color(0xFF795548),
+    Color(0xFFE2725B), Color(0xFF808000), Color(0xFFA0522D), Color(0xFFFFDB58),
     Color(0xFFB22222), Color(0xFF228B22), Color(0xFFFFBF00), Color(0xFF7B3F00),
-    Color(0xFF0047AB), Color(0xFF50C878), Color(0xFF0A0A0A), Color(0xFF3E3E3E),
+    Color(0xFF0047AB), Color(0xFF50C878), Color(0xFF8A2BE2), Color(0xFFC0C0C0),
   ];
 
   Future<void> _pickImage() async {

@@ -3,6 +3,14 @@ from sqlalchemy.orm import Session
 from typing import List
 from .. import schemas, crud, database
 from ..models import Prenda_Ocasion
+from ..crud import crud_prenda
+from fastapi import UploadFile, File
+from ..schemas import PrendaCreate
+from ..crud import crud_prenda
+from ..database import get_db
+from app.utils.s3_upload import upload_image_to_s3
+from fastapi import Form
+
 
 router = APIRouter(
     prefix="/prendas",
@@ -28,6 +36,7 @@ def update_prenda(prenda_id: int, prenda_update: schemas.PrendaCreate, db: Sessi
 @router.delete("/{prenda_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_prenda(prenda_id: int, db: Session = Depends(database.get_db)):
     return crud.crud_prenda.delete_prenda(db, prenda_id)
+
 @router.get("/usuario/{id_usuario}", response_model=List[schemas.PrendaOut])
 def read_prendas_por_usuario(id_usuario: int, db: Session = Depends(database.get_db)):
     prendas = crud.crud_prenda.get_prendas_por_usuario(db, id_usuario)
@@ -41,3 +50,33 @@ def asociar_ocasion(prenda_id: int, ocasion_id: int, db: Session =  Depends(data
     db.add(nueva_asociacion)
     db.commit()
     return {"mensaje": "Asociación registrada correctamente"}
+
+@router.post("/carga-masiva")
+async def carga_masiva_prendas(
+    id_usuario: int = Form(...),
+    tipo: str = Form(...),
+    file: UploadFile = File(...),
+    db: Session = Depends(database.get_db)
+):
+    try:
+        # 1. Subir la imagen a S3
+        url =  upload_image_to_s3(file, id_usuario, folder="outfits")
+
+        # 2. Crear prenda con datos por defecto (puedes mejorarlo con IA después)
+        prenda = PrendaCreate(
+            nombre=file.filename.split('.')[0],
+            tipo=tipo,
+            color="#808080",
+            temporada="Todo el año",
+            estado_uso="Nuevo",
+            imagen_url=url,
+            id_usuario=id_usuario,
+            id_estilo=2  # Asumimos Regular Fit por defecto (ajusta según tu lógica)
+        )
+
+        nueva_prenda = crud_prenda.create_prenda(db, prenda)
+        return {"mensaje": "Prenda creada", "id_prenda": nueva_prenda.id_prenda}
+
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

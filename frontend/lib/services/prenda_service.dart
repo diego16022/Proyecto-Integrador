@@ -2,6 +2,9 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
 import 'models/prenda.dart';
+import 'package:frontend/services/auth_service.dart';
+import 'package:http_parser/http_parser.dart';
+import 'dart:typed_data';
 
 class PrendaService {
   // Subir imagen
@@ -80,7 +83,9 @@ class PrendaService {
     }
   }
    static Future<List<Prenda>> obtenerPrendas() async {
-    final url = Uri.parse('http://10.0.2.2:8000/prendas/');
+    final idUsuario = SesionUsuario.idUsuario;
+    final url = Uri.parse('http://10.0.2.2:8000/prendas/usuario/$idUsuario');
+
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -99,4 +104,37 @@ class PrendaService {
     throw Exception('Error al asociar ocasión: ${response.body}');
   }
   }
+  static Future<List<Prenda>> obtenerPrendasUsuario(int idUsuario) async {
+  final url = Uri.parse('http://10.0.2.2:8000/usuario/$idUsuario');
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.map((item) => Prenda.fromJson(item)).toList();
+  } else {
+    throw Exception('Error al obtener prendas del usuario: ${response.body}');
+    }
+  }
+
+  static Future<void> cargarPrendasMasivasDesdeFile(List<File> imagenes, int idUsuario, String tipo) async {
+  for (File imageFile in imagenes) {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://10.0.2.2:8000/prendas/carga-masiva'),
+    );
+
+    request.fields['id_usuario'] = idUsuario.toString();
+    request.fields['tipo'] = tipo;
+    request.files.add(await http.MultipartFile.fromPath(
+      'file',
+      imageFile.path,
+      contentType: MediaType('image', 'jpeg'),
+    ));
+
+    var response = await request.send();
+    if (response.statusCode != 200) {
+      throw Exception('Error al subir ${imageFile.path}');
+    }
+  }
+}
 }

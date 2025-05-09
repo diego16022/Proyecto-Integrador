@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/models/prenda.dart';
 import 'package:frontend/screens/NuevaprendaWidget.dart';
 import 'package:frontend/screens/EditarPrendaWidget.dart';
+import 'package:frontend/screens/CargaMasivaPrendasWidget.dart'; // Asegúrate de importar esta pantalla
 import 'package:frontend/services/prenda_service.dart';
 
 class ClosetvirtualWidget extends StatefulWidget {
@@ -86,7 +88,7 @@ class _ClosetvirtualWidgetState extends State<ClosetvirtualWidget> {
                 ],
               ),
             ),
-            _buildAddButton(),
+            _buildAddButton(context),
           ],
         ),
       ),
@@ -244,7 +246,7 @@ class _ClosetvirtualWidgetState extends State<ClosetvirtualWidget> {
     );
   }
 
-  Widget _buildAddButton() {
+  Widget _buildAddButton(BuildContext context) {
     return Positioned(
       top: 12,
       right: 12,
@@ -252,11 +254,36 @@ class _ClosetvirtualWidgetState extends State<ClosetvirtualWidget> {
         onTap: () {
           showDialog(
             context: context,
-            barrierDismissible: false,
             builder: (BuildContext context) {
-              return Dialog(
-                backgroundColor: Colors.transparent,
-                child: NuevaPrendaWidget(),
+              return AlertDialog(
+                title: const Text('¿Cómo quieres agregar prendas?'),
+                content: const Text('Puedes agregar una prenda individual o hacer una carga masiva.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // cerrar el diálogo
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => Dialog(
+                          backgroundColor: Colors.transparent,
+                          child: NuevaPrendaWidget(),
+                        ),
+                      );
+                    },
+                    child: const Text('Carga Individual'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // cerrar el diálogo
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => CargaMasivaPrendasWidget()),
+                      );
+                    },
+                    child: const Text('Carga Masiva'),
+                  ),
+                ],
               );
             },
           );

@@ -85,12 +85,12 @@ def generar_outfit(usuario_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="El usuario no tiene análisis cromático")
 
     colores_favorables = {
-        'Tipo_I': ["#000080", "#FF00FF", "#FFFFFF", "#000000"],
-        'Tipo_II': ["#FFC0CB", "#E6E6FA", "#DCDCDC", "#9DC183"],
-        'Tipo_III': ["#FF7F50", "#98FF98", "#87CEEB", "#40E0D0"],
-        'Tipo_IV': ["#E2725B", "#808000", "#A0522D", "#FFDB58"],
-        'Tipo_V': ["#B22222", "#228B22", "#FFBF00", "#7B3F00"],
-        'Tipo_VI': ["#0047AB", "#50C878", "#8A2BE2", "#C0C0C0"]
+        'Tipo I': ["#000080", "#FF00FF", "#FFFFFF", "#000000"],
+        'Tipo II': ["#FFC0CB", "#E6E6FA", "#DCDCDC", "#9DC183"],
+        'Tipo III': ["#FF7F50", "#98FF98", "#87CEEB", "#40E0D0"],
+        'Tipo IV': ["#E2725B", "#808000", "#A0522D", "#FFDB58"],
+        'Tipo V': ["#B22222", "#228B22", "#FFBF00", "#7B3F00"],
+        'Tipo VI': ["#0047AB", "#50C878", "#8A2BE2", "#C0C0C0"]
     }
 
     colores = colores_favorables.get(tipo_piel, [])
